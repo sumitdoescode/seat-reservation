@@ -36,7 +36,7 @@ const page = () => {
                 </div>
                 <div className="mt-5">
                     <h2 className="text-base font-semibold">
-                        Cubicle : <span className="uppercase">{`NOSTP 01 ${floor} ${wing} ${seatNumber}`}</span>
+                        Cubicle : <span className="uppercase">{`NOSTP 01 ${floor.slice(-2)} ${wing} ${seatNumber}`}</span>
                     </h2>
                     <p className="text-stone-600 text-xs mt-0.5 font-medium">
                         {city}, {dc}, {buildingNumber}, {floor}, {wing} Wing
