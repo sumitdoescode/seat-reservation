@@ -1,12 +1,11 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SeatContext } from "@/contexts/SeatContext";
 
 const formatDate = () => {
     const d = new Date();
@@ -18,9 +17,7 @@ const formatDate2 = () => {
 };
 
 const page = () => {
-    const searchParams = useSearchParams();
-    const cubicleNumber = searchParams.get("cubicle");
-    const [cubicle, setCubicle] = useState(cubicleNumber || "NOSTP 01 10 A 015");
+    const { seatNumber } = useContext(SeatContext);
     const [date, setDate] = useState(formatDate2());
     const [city, setCity] = useState("Noida");
     const [dc, setDC] = useState("NOIDA-STP");
@@ -28,7 +25,7 @@ const page = () => {
     const [floor, setFloor] = useState("FLOOR-10");
     const [wing, setWing] = useState("A");
     return (
-        <section className="px-4 py-4 bg-stone-100">
+        <section className="px-4 pt-4 pb-16 bg-stone-100">
             <div className="px-4 pt-4 pb-10 bg-white rounded shadow-md">
                 <div className="flex items-center justify-between">
                     <div>
@@ -39,7 +36,7 @@ const page = () => {
                 </div>
                 <div className="mt-5">
                     <h2 className="text-base font-semibold">
-                        Cubicle : <span className="uppercase">{cubicle ? cubicle : "NOSTP 01 10 A 015"}</span>
+                        Cubicle : <span className="uppercase">{`NOSTP 01 ${floor} ${wing} ${seatNumber}`}</span>
                     </h2>
                     <p className="text-stone-600 text-xs mt-0.5 font-medium">
                         {city}, {dc}, {buildingNumber}, {floor}, {wing} Wing
