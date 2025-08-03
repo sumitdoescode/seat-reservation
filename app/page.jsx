@@ -1,15 +1,32 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useSearchParams } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const formatDate = () => {
     const d = new Date();
     return `${d.getDate().toString().padStart(2, "0")}-${d.toLocaleString("en-US", { month: "short" })}-${d.getFullYear()}`;
 };
 
+const formatDate2 = () => {
+    return new Date().toISOString().slice(0, 10);
+};
+
 const page = () => {
+    const searchParams = useSearchParams();
+    const cubicleNumber = searchParams.get("cubicle");
+    const [cubicle, setCubicle] = useState(cubicleNumber || "NOSTP 01 10 A 015");
+    const [date, setDate] = useState(formatDate2());
+    const [city, setCity] = useState("Noida");
+    const [dc, setDC] = useState("NOIDA-STP");
+    const [buildingNumber, setBuildingNumber] = useState("ACECAPITOL");
+    const [floor, setFloor] = useState("FLOOR-10");
+    const [wing, setWing] = useState("A");
     return (
         <section className="px-4 py-4 bg-stone-100">
             <div className="px-4 pt-4 pb-10 bg-white rounded shadow-md">
@@ -21,8 +38,12 @@ const page = () => {
                     <button className="uppercase text-xs font-medium text-green-600 border-2 px-5 py-0.5 rounded-full border-green-600">booked</button>
                 </div>
                 <div className="mt-5">
-                    <h2 className="text-base font-semibold">Cubicle : NOSTP 01 10 A 015</h2>
-                    <p className="text-stone-600 text-xs mt-0.5 font-medium">Noida, NOIDA-STP, ACECAPITOL, FLOOR-10, A Wing</p>
+                    <h2 className="text-base font-semibold">
+                        Cubicle : <span className="uppercase">{cubicle ? cubicle : "NOSTP 01 10 A 015"}</span>
+                    </h2>
+                    <p className="text-stone-600 text-xs mt-0.5 font-medium">
+                        {city}, {dc}, {buildingNumber}, {floor}, {wing} Wing
+                    </p>
                 </div>
             </div>
             <div className="mt-4">
@@ -32,21 +53,21 @@ const page = () => {
                         <Label htmlFor="date" className={"text-stone-500 text-xs font-medium"}>
                             Date
                         </Label>
-                        <Input type="date" className={"mt-1.5"} id="date" placeholder="Date" />
+                        <Input type="date" className={"mt-1.5"} id="date" placeholder="Date" value={date} onChange={(e) => setDate(e.target.value)} />
                     </div>
 
                     <div>
                         <Label htmlFor="city" className={"text-stone-500 text-xs font-medium"}>
                             City
                         </Label>
-                        <Input type="text" className={"mt-1.5"} id="city" placeholder="City" value="Noida" />
+                        <Input type="text" className={"mt-1.5"} id="city" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
                     </div>
 
                     <div>
                         <Label htmlFor="dc" className={"text-stone-500 text-xs font-medium"}>
                             DC
                         </Label>
-                        <Input type="text" className={"mt-1.5"} id="dc" placeholder="DC" value="NOIDA-STP" />
+                        <Input type="text" className={"mt-1.5"} id="dc" placeholder="DC" value={dc} onChange={(e) => setDC(e.target.value)} />
                     </div>
 
                     <div>
@@ -73,33 +94,49 @@ const page = () => {
                         <Label htmlFor="building-number" className={"text-stone-500 text-xs font-medium"}>
                             Building Number
                         </Label>
-                        <Input type="text" className={"mt-1.5"} id="building-numer" placeholder="Building Number" value="ACECAPITOL" />
+                        <Select defaultValue={buildingNumber} onValueChange={(value) => setBuildingNumber(value)}>
+                            <SelectTrigger className="w-full mt-1.5">
+                                <SelectValue placeholder="Building Number" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="ACECAPITOL">ACECAPITOL</SelectItem>
+                                <SelectItem value="BHUT01">BHUT01</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div>
+                        <div className="w-full">
                             <Label htmlFor="floor" className={"text-stone-500 text-xs font-medium"}>
                                 Floor
                             </Label>
-                            <Input type="text" className={"mt-1.5"} id="floor" placeholder="Floor" value="FLOOR-10" />
+                            <Input type="text" className={"mt-1.5 w-full"} id="floor" placeholder="Floor" value={floor} onChange={(e) => setFloor(e.target.value)} />
                         </div>
-                        <div>
+                        <div className="w-full">
                             <Label htmlFor="wing" className={"text-stone-500 text-xs font-medium"}>
                                 Wing
                             </Label>
-                            <Input type="text" className={"mt-1.5"} id="wing" placeholder="Wing" value="A" />
+                            <Select defaultValue={wing} onValueChange={(value) => setWing(value)}>
+                                <SelectTrigger className="w-full mt-1.5">
+                                    <SelectValue placeholder="Wing" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="A">A</SelectItem>
+                                    <SelectItem value="C">C</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="px-4 py-4 mt-10 bg-white rounded shadow-md">
+            <div className="px-4 py-4 mt-6 bg-white rounded shadow-md">
                 <div className="flex items-center justify-between">
                     <h2 className="text-base font-semibold text-stone-900">Available Seats</h2>
                     <h3 className="text-2xl font-medium text-green-600">0</h3>
                 </div>
             </div>
 
-            <div className="mt-8 flex items-start gap-4">
+            <div className="mt-6 flex items-start gap-4">
                 <Checkbox checked={true} className={"mt-0.5"} />
                 <p className="text-stone-800 text-sm font-normal mt-0">Are you willing to disclose that you are in office so that colleagues can know for better collaboration. You can change this while booking next time or rebooking.</p>
             </div>
